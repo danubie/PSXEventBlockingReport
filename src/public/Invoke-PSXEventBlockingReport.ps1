@@ -15,7 +15,7 @@ function Invoke-PSXEventBlockingReport {
             $SqlSession = Connect-DbaInstance -SqlInstance $SqlInstance
 
             $DomainInstanceName = $SqlSession.DomainInstanceName -replace '\\', '_'
-            $PathExportFolder = "$($ENV:HOMEDRIVE)$($ENV:HOMEPATH)\Documents\BlockedProcessReports"
+            $PathExportFolder = "$($env:USERPROFILE)\Documents\BlockedProcessReports"
             Assert-IsaPathExists -Path $PathExportFolder -ItemType Directory -Create
             $ReportXlsName = "$PathExportFolder\$($DomainInstanceName)_$(Get-Date -Format 'yyyy-MM-dd').xlsx"
 
