@@ -2,7 +2,8 @@ function Invoke-PSXEventBlockingReport {
     [CmdletBinding()]
     param (
         [string] $SqlInstance,
-        [string] $SessionName = 'Blocked_Process_Report'
+        [string] $SessionName = 'Blocked_Process_Report',
+        [string] $PathToTemplateXlsx
     )
 
     begin {
@@ -30,8 +31,16 @@ function Invoke-PSXEventBlockingReport {
             }
             $NewestFile = $FilesXel | Sort-Object -Property LastWriteTime -Descending | Select-Object -First 1
 
+            $exportParams = @{
+                Path        = $ReportXlsName
+                SqlInstance = $SqlInstance
+            }
+            if ($PathToTemplateXlsx) {
+                Assert-IsaPathExists -Path $PathToTemplateXlsx -ItemType File
+                $exportParams.Add("TemplateXlsx","$PathExportFolder\Blocking_Template.xlsx")
+            }
             Read-DbaXEFile -Path $NewestFile |
-                Export-PSXEventBlockingReport -Path $ReportXlsName -SqlInstance $SqlInstance -TemplateXlsx "$PathExportFolder\Blocking_Template.xlsx"
+                Export-PSXEventBlockingReport @exportParams
         }
         Catch {
             Throw $_
