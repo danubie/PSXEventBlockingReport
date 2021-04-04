@@ -55,6 +55,7 @@ function Assert-IsaPathExists {
             $splat.Remove('Create')          # Throw is "our own" parameter
             $null = New-Item @splat
         } else {
+            Write-PSFMessage -Level Error -Message "Could not create ($Path)"
             Throw [System.Management.Automation.ItemNotFoundException]
         }
     }
